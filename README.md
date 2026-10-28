@@ -3,6 +3,9 @@
 An OpenAI-compatible proxy for Gemini chat completions. It translates
 OpenAI-style text messages into Gemini's native `generateContent` API requests
 and translates the response back to OpenAI chat-completion format.
+Tool schemas that contain `fontWeight` are presented to Gemini as an integer
+with guidance to use one of OpenReel's supported numeric weights (100 through
+900 in increments of 100).
 
 ## Run locally
 
@@ -29,3 +32,15 @@ and inline base64 image, video, and audio content. Remote media URLs are not
 fetched; send media as base64 data URLs. Use a Gemini model ID such as
 `gemini-3.8-flash`. If no model is provided, the proxy uses `gemini-3.8-flash`;
 non-Gemini model IDs are rejected.
+
+## Code structure
+
+- `index.js` loads environment variables and starts the server.
+- `src/app.js` configures Express middleware and mounts the API routes.
+- `src/routes/api.js` handles the chat-completions and models endpoints.
+- `src/converters/openai-to-gemini.js` builds Gemini requests from OpenAI-style
+  requests and normalizes function arguments.
+- `src/converters/gemini-to-openai.js` converts Gemini responses to
+  OpenAI-compatible responses.
+- `src/converters/gemini-stream.js` relays Gemini streaming responses as
+  OpenAI-compatible server-sent events.
